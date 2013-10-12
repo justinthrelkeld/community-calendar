@@ -15,6 +15,8 @@ group :development do
   gem 'hamlbars', '~> 2.0'
   gem 'guard'
   #gem 'coffee-filter'
+  gem 'bourbon'
+  gem 'neat'
 end
 
 # Cross-templating language block fix for Ruby 1.8

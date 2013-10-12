@@ -1,0 +1,13 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}
+    %title= data.page.title
+    = stylesheet_link_tag "style"
+    = javascript_include_tag "site"
+  %body
+    %header
+      %h1 Super Awesome HTML5 Community Calendar!
+
+    = yield
+    %footer
