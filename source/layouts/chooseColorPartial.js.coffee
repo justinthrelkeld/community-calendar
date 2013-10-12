@@ -1,3 +1,0 @@
-hello = () ->
-	alert "hello!"
-hello()
