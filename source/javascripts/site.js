@@ -1,1 +1,1 @@
-alert('hello');
+//= require "_oncanvas.js"

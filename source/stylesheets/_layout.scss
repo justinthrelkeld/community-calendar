@@ -1,7 +1,6 @@
 $side-panel-width: 65%;
 $slide-speed: .8s;
 
-
 // layout
 
 html{
@@ -31,6 +30,11 @@ body{
     @include transition (margin-left $slide-speed);
     width: 100%;
     height: 100%;
+    header{
+      @include span-columns(10);
+      float: none;
+      margin: 0 auto;
+    }
   }
 
   #content {
