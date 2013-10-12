@@ -2,22 +2,11 @@
 @import "grid-settings";
 @import "neat";
 
+@import "layout";
+
 $blue: #3bbfce;
 $margin: 16px;
 
 body {
 	font-family: helvetica;
-	background: $blue;
-}
-
-.content-navigation {
-  border-color: $blue;
-  color:
-    darken($blue, 9%);
-}
-
-.border {
-  padding: $margin / 2;
-  margin: $margin / 2;
-  border-color: $blue;
 }

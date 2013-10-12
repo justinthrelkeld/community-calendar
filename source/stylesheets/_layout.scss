@@ -1,0 +1,155 @@
+$side-panel-width: 65%;
+$slide-speed: .8s;
+
+
+// layout
+
+html{
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+body{
+  @include outer-container;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+
+  #nav{
+    @include span-columns($grid-columns/2);
+    position: absolute;
+    top:0;
+    left:0;
+  }
+
+  main{
+    @include span-columns($grid-columns);
+    @include pad(0);
+    @include omega();
+    margin: 0;
+    @include transition (margin-left $slide-speed);
+    width: 100%;
+    height: 100%;
+  }
+
+  #content {
+    @include span-columns(10);
+    float: none;
+    margin: 0 auto;
+  }
+
+  #right{
+    @include span-columns($grid-columns/2);
+    position: absolute;
+    top:0;
+    right:0;
+  }
+}
+
+// universal styling
+
+body{
+  ul.right{
+    float: right;
+    li{
+      width: 45px;
+      height: 45px;
+      float: left;
+    }
+  }
+}
+
+@include media($mobile){
+  ul.right{
+    width: 100%;
+    float: left;
+    padding-left: 3em;
+    margin-top: 2em;
+    li{
+      clear: both;
+      width: 100%;
+      float: left;
+      overflow: visible;
+      a{
+        color: white;
+        text-decoration: none;
+        width: 100%;
+        text-indent: 50px;
+        overflow: visible;
+        line-height: 3em;
+      }
+    }
+  }
+}
+
+// OnCanvas
+
+#show-nav,
+#show-right{
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  display: none;
+}
+
+#show-nav{
+  left: 0;
+}
+#show-right{
+  right: 0;
+}
+
+@include media($mobile){
+  #show-nav,
+  #show-right{
+    display: block;
+    visibility: hidden;
+    text-decoration: none;
+    &:before{
+      font-size: 2em;
+      font-family: "FontAwesome";
+      content: "\f053";
+      display: block;
+      text-indent: 0;
+      visibility: visible;
+      text-align: right;
+      padding: .5em;
+    }
+  }
+
+  #nav, #right{
+    z-index: 10;
+    width: $side-panel-width !important;
+    height: 100%;
+    display: block;
+  }
+
+  body.show-nav{
+    main{
+      margin-left: $side-panel-width;
+    }
+    #right{
+      z-index: -10;
+    }
+    #show-nav:before{
+    }
+  }
+
+  body.show-right{
+    main{
+      margin-left: -$side-panel-width;
+    }
+    #nav{
+      z-index: -10;
+    }
+    #show-right:before{
+      content: "\f054";
+    }
+  }
+
+  main{
+    @include position(relative);
+    z-index: 20;
+  }
+}

@@ -8,15 +8,20 @@
     
     %title= data.page.title
     
-    = javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"
-    = javascript_include_tag "vendor/modernizr-2.6.1.min"
+    //= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"
     = stylesheet_link_tag "http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
 
     = stylesheet_link_tag "style"
     = javascript_include_tag "site"
   %body
-    %header
-      %h1 Super Awesome HTML5 Community Calendar!
+    %main
+      %header
+        %a#show-right{:href => "#social"} Social
+        %h1 Super Awesome HTML5 Community Calendar!
 
-    = yield
-    %footer
+      %section#content
+        = yield
+      %footer
+
+    #right
+      put search filtering stuff here
