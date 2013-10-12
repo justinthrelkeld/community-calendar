@@ -1,0 +1,9 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}
+    %title= data.page.title
+    = stylesheet_link_tag "site.css"
+    = javascript_include_tag "site.js"
+  %body
+    = yield
