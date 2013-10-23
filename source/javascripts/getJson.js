@@ -4,10 +4,16 @@ var myObject = {};
 makeRequest = function (Fname) {
 	//connection opened
 	activeAjaxConnections++;
+	//console.log("activeAjaxConnections: " + activeAjaxConnections + " on opened");
 	//new xmlhttprequest
 	var ai = new AJAXInteraction("/events/" + Fname + ".json", function(req) {
 		//connection closed
-		activeAjaxConnections--;
+
+		//if the headers were returned
+		if (req.readyState === 2) {
+			activeAjaxConnections--;
+			//console.log("activeAjaxConnections: " + activeAjaxConnections + " on closed");
+		}
 		// if the file has been loaded
 		if (req.readyState === 4) {
 			//if it is ok or hasn't been modified (cached)
@@ -18,14 +24,16 @@ makeRequest = function (Fname) {
 				//console.log("not found");
 			}
 			//console.log(req.responseText);
+			//console.log(activeAjaxConnections); //if this is enabled, it calls parseEvents() twice, perhaps due to something being there for it check how many connections are available  
 			// if all requests have returned
 			if (activeAjaxConnections === 0) {
+				console.log('parsing Events');
 				parseEvents(myObject);
 			}
 		}
 		//console.log(activeAjaxConnections);
 	}, true);
-	ai.doGet();
+	ai.doGet("text/json; charset=utf-8");
 
 }
 

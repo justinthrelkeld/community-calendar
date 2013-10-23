@@ -24,7 +24,7 @@ AJAXInteraction = function (url, callback, custom) {
 
 	this.doGet = function(contentType) {
 		req.open("GET", url, true);
-		req.overrideMimeType("text/json; charset=utf-8")
+		req.overrideMimeType(contentType);
 		//req.addEventListener("");
 		req.send();
 	}
