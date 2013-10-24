@@ -24,7 +24,7 @@ AJAXInteraction = function (url, callback, custom) {
 
 	this.doGet = function(contentType) {
 		req.open("GET", url, true);
-		req.overrideMimeType(contentType);
+		//if (contentType !== 'undefined') {req.overrideMimeType(contentType)}//responseType
 		//req.addEventListener("");
 		req.send();
 	}

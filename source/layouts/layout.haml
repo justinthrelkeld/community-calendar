@@ -18,7 +18,12 @@
       %header
         %a#show-right{:href => "#social"} Social
         %h1 Super Awesome HTML5 Community Calendar!
-
+        %nav
+          %ul
+            %li
+              = link_to 'Home', '/index.html'
+            %li
+              = link_to 'GetEventDevPage', '/getEvents.html'
       %section#content
         = yield
       %footer

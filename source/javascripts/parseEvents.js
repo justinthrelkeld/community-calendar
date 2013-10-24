@@ -10,10 +10,12 @@ parseEvents = function (events) {
       weekdays_abb = ["Sun","Mon","Tues","Weds","Thurs","Fri","Sat"],
       months = ["January","February","March","April","May","June","July","August","September","October","November","December"],
       months_abb = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  /* -----TODO-----
-  // Sort object by date (day) and by time
-  // Prob want to make it only create one day of events at a time. This will most likely bog down
-  // More to come
+  /* ------TODO------
+  // - Sort object by date (day) and by time. Passing the date as an object will help with that too
+  // - Prob want to make it only create one day of events at a time. This will most likely bog down
+  // - Make getEventFiles() accept a dev argument for the start date so the files mustn't renamed every couple days
+  // - Pass dates parseEvent() in an array so we don't waste resource parsing a one date straight back to a date
+  // --More to come--
   */
   var eventDays = Object.getOwnPropertyNames(events),
       daysCount = eventDays.length,
@@ -67,7 +69,7 @@ parseEvents = function (events) {
 }
 // 1,0 gets today and 0 days ahead, so 1 file
 // 1,5 gets today and 5 days ahead, so 6 files
-getEventFiles(1,5);
+getEventFiles(1,10,"23.10.13");
 //console.log(getEventFiles(1,5));
 // ^ ^ ^ ^ ^ ^ ^- this does everythings!
 
