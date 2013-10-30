@@ -78,7 +78,15 @@ body{
 }
 
 @include media($mobile){
-  #show-nav,
+  html, body{width: 100%; height: 100%;}
+  body #content{
+    width: 100%;
+    height: 100%;
+    // top: 0;
+    // left: 0;
+    position: relative;
+  }
+  #show-map,
   #show-right{
     display: block;
     visibility: hidden;
@@ -95,29 +103,29 @@ body{
     }
   }
 
-  #nav, #right{
+  #map, #right{
     z-index: 10;
     width: $side-panel-width !important;
     height: 100%;
     display: block;
   }
 
-  body.show-nav{
-    main{
+  body.show-map{
+    #content{
       margin-left: $side-panel-width;
     }
     #right{
       z-index: -10;
     }
-    #show-nav:before{
+    #show-map:before{
     }
   }
 
   body.show-right{
-    main{
+    #content{
       margin-left: -$side-panel-width;
     }
-    #nav{
+    #map{
       z-index: -10;
     }
     #show-right:before{
