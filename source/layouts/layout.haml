@@ -14,12 +14,7 @@
     = stylesheet_link_tag "style"
     = javascript_include_tag "site"
   %body
-    %main
-      %header
-        //%a#show-left{:href => "#left"} Left
-        %h1 Super Awesome HTML5 Community Calendar!
-
-      %section#content
-        = yield
-      %footer
-      #map
+    %section#content
+      = yield
+    %footer
+    #map

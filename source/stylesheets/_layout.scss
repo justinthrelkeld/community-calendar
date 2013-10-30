@@ -16,6 +16,11 @@ body{
   width: 100%;
   height: 100%;
 
+  > header{
+    @include pad();
+    padding-top: 0;
+  }
+
   #content{
     position: absolute;
     bottom: 0;
@@ -32,7 +37,15 @@ body{
     overflow: scroll;
   }
 
-  map{}
+  #map{
+    background-image: url(https://raw.github.com/subtlepatterns/SubtlePatterns/gh-pages/hexellence.png);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: -1;
+  }
 
   footer{
     position: absolute;
@@ -42,6 +55,7 @@ body{
     width: 100%;
     height: 5em;
     @include box-shadow( 0 0 3px 0px hsla(0, 0%, 0%, 0.65) );
+    background-color: white;
   }
 
 }
