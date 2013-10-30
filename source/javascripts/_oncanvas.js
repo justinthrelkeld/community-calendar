@@ -1,11 +1,12 @@
-// functionallity for on canvas sliding sidebars
-function onCanvas(){
-  $('#show-right, #right').on('click', function(){
-    console.log('showing right');
-    $('body').toggleClass('show-right');
-  });
+function initOnCanvas(){
+  // $('#show-social, #social').on('click', function(){
+  //   console.log('showing social');
+  //   $('body').toggleClass('show-social');
+  // });
 
-  $('#show-nav, #nav').on('click', function(){
-    console.log('showing nav');
-    $('body').toggleClass('show-nav');
-  });}
+  //$('#show-map, #map').on('click', function(){
+  $('#content').on('click', function(){
+    console.log('showing map');
+    $('body').toggleClass('show-map');
+  });
+}

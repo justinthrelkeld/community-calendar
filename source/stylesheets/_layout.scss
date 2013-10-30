@@ -1,5 +1,6 @@
-$side-panel-width: 65%;
+$side-panel-width: 85%;
 $slide-speed: .8s;
+
 
 // layout
 
@@ -15,76 +16,49 @@ body{
   width: 100%;
   height: 100%;
 
-  #nav{
-    @include span-columns($grid-columns/2);
+  > header{
+    @include pad();
+    padding-top: 0;
+  }
+
+  #content{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 85%;
+    width: 27em;
+    background-color: $light-background;
+    z-index: 20;
+    border-radius: 0 7px 0 0;
+    @include box-shadow( 0 0 3px 0px hsla(0, 0%, 0%, 0.65) );
+    @include pad();
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: scroll;
+    @include transition ( margin $slide-speed );
+  }
+
+  #map{
+    background-image: url(https://raw.github.com/subtlepatterns/SubtlePatterns/gh-pages/hexellence.png);
+    width: 100%;
+    height: 100%;
     position: absolute;
     top:0;
     left:0;
+    z-index: -1;
   }
 
-  main{
-    @include span-columns($grid-columns);
-    @include pad(0);
-    @include omega();
-    margin: 0;
-    @include transition (margin-left $slide-speed);
-    width: 100%;
-    height: 100%;
-    header{
-      @include span-columns(10);
-      float: none;
-      margin: 0 auto;
-    }
-  }
-
-  #content {
-    @include span-columns(10);
-    float: none;
-    margin: 0 auto;
-  }
-
-  #right{
-    @include span-columns($grid-columns/2);
+  footer{
     position: absolute;
-    top:0;
-    right:0;
-  }
-}
-
-// universal styling
-
-body{
-  ul.right{
-    float: right;
-    li{
-      width: 45px;
-      height: 45px;
-      float: left;
-    }
-  }
-}
-
-@include media($mobile){
-  ul.right{
+    bottom: 0;
+    left: 0;
+    z-index: 10;
     width: 100%;
-    float: left;
-    padding-left: 3em;
-    margin-top: 2em;
-    li{
-      clear: both;
-      width: 100%;
-      float: left;
-      overflow: visible;
-      a{
-        color: white;
-        text-decoration: none;
-        width: 100%;
-        text-indent: 50px;
-        overflow: visible;
-        line-height: 3em;
-      }
-    }
+    height: 5em;
+    @include box-shadow( 0 0 3px 0px hsla(0, 0%, 0%, 0.65) );
+    background-color: white;
   }
+
 }
 
 // OnCanvas
@@ -105,7 +79,16 @@ body{
 }
 
 @include media($mobile){
-  #show-nav,
+  html, body{width: 100%; height: 100%; margin: 0;}
+  body footer{
+    z-index: -1;
+  }
+  body #content{
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  #show-map,
   #show-right{
     display: block;
     visibility: hidden;
@@ -122,33 +105,45 @@ body{
     }
   }
 
-  #nav, #right{
+  #map, #right{
     z-index: 10;
     width: $side-panel-width !important;
     height: 100%;
     display: block;
   }
 
-  body.show-nav{
-    main{
+  body.show-map,
+  body.show-right{
+    #content{
+      overflow: hidden;
+    }
+  }
+
+  body.show-map{
+    #content{
       margin-left: $side-panel-width;
     }
     #right{
       z-index: -10;
     }
-    #show-nav:before{
+    #show-map:before{
     }
   }
 
-  body.show-right{
-    main{
+  body.show-right{ // will likely become show-event
+    #content{
       margin-left: -$side-panel-width;
     }
-    #nav{
+    #map{
+      position: absolute;
+      right: 0;
       z-index: -10;
     }
     #show-right:before{
       content: "\f054";
+    }
+    body footer{
+      z-index: -1;
     }
   }
 

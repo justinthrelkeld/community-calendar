@@ -1,12 +1,22 @@
+$blue: #3bbfce;
+$light-background: #f9f4ed;
+$margin: 16px;
+
 @import "bourbon";
 @import "grid-settings";
 @import "neat";
+@import "fonts";
 
 @import "layout";
+@import "calendar";
 
-$blue: #3bbfce;
-$margin: 16px;
+#map {
+  width:600px;
+  height:400px;
+  z-index: 1 !important;
+}
 
 body {
-	font-family: helvetica;
+	font-family: maven;
+  color: #494949;
 }

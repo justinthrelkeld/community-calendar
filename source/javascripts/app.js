@@ -1,1 +1,2 @@
-onCanvas();
+initMaps();
+initOnCanvas();
