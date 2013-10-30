@@ -68,9 +68,8 @@ body{
   }
   .title,
   .location{
-    display: inline-block;
-    clear: both;
-    vertical-align: middle;
+    display: block;
+    float: none;
   }
   .title{
     font-weight: 300;
