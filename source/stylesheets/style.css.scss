@@ -10,6 +10,12 @@ $margin: 16px;
 @import "layout";
 @import "calendar";
 
+#map {
+  width:600px;
+  height:400px;
+  z-index: 1 !important;
+}
+
 body {
 	font-family: maven;
   color: #494949;
