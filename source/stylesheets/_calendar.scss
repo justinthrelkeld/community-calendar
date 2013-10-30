@@ -1,0 +1,84 @@
+body{
+  .calendar{
+    @include pad();
+    ul{
+      margin: 0;
+      padding: 0;
+      li{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: block;
+        &.event{
+          clear: both;
+          border-bottom: 1px lighten($light-background, 2%) solid;
+          border-top: 1px rgba(#333, 0.05) solid;
+          padding-top:0.5em;
+          padding-bottom:0.5em;
+          &:last-child{
+            border-bottom: none;
+          }
+          &:first-child{
+            border-top: none;
+          }
+        }
+      }
+    }
+  }
+  .event{
+    time{
+      display: block;
+      height: 2.4em;
+      width: 3em;
+      float: left;
+      border-right: 1px rgba(#333, 0.05) solid;
+      margin-right: .5em;
+      .minute,
+      .daypart{
+        overflow: hidden;
+        width: 1.5em;
+        float: left;
+        height: 50%;
+        line-height: 2em;
+        font-size: .8em;
+        padding-left: .07em;
+        font-weight: 200;
+      }
+      .hour{
+        font-size: 2.5em;
+        float: left;
+        font-weight: 200;
+      }
+      .minute{}
+      .daypart{
+        text-indent: -100%;
+        vertical-align: baseline;
+        &:after{
+          position: relative;
+          left: 0;
+        }
+        &.pm:after{
+          content: "P"
+        }
+        &.am:after{
+          content: "A"
+        }
+      }
+    }
+  }
+  .title,
+  .location{
+    display: inline-block;
+    clear: both;
+    vertical-align: middle;
+  }
+  .title{
+    font-weight: 300;
+  }
+  .location{
+    font-weight: 200;
+    font-size: .9em;
+  }
+
+}
+
