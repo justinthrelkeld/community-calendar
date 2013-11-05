@@ -42,12 +42,18 @@ timeTo12Hour = function(dObj) {
   var hours = dObj.getHours();
   var minutes = dObj.getMinutes();
   var d12Hour;
-  if (hours > 12) {
+  if (hours === 12) {
+    d12Hour = {
+      "getHour": hours,
+      "getMinute": minutes,
+      "getPeriod": "pm"
+    }
+  } else if (hours > 12) {
     d12Hour = {
       "getHour": hours - 12,
       "getMinute": minutes,
       "getPeriod": "pm"
-    } 
+    };
   } else {
     d12Hour = {
       "getHour": hours,
@@ -84,20 +90,14 @@ parseEvents = function (events, eventkeys) {
 
   var daysCount = eventkeys.length,
   daysOfEvents_HTML = "";
-  //console.log("daysCount" + daysCount);
-  //console.log(eventkeys);
-  console.log(eventkeys);
   var dasdd = new Date();
   console.log(dasdd.toString());
-  //console.log(dates[0].getDate() + '.' + (dates[0].getMonth() + 1) + '.' + (dates[0].getFullYear() - 2000));
 
   for (var i = 0; i < daysCount; i++) {
-    //console.log(eventKeys);
 
     var date = eventDateFromString(eventkeys[i]);
     var eventsDateH2 = (months[date.getMonth()]) + ' ' + (date.getDate() + 1) + ', ' + (date.getFullYear() - 2000);
     var event_ul_id = (date.getFullYear() - 2000) + '-' + (date.getMonth() - 1) + '-' + (date.getDate() + 1);
-    //event_ul_id = (dates.getMonth() - 1)+'-'+date.getDate+'-'+date.getFullYear;
     
     // If we want much more complex templating then this we should probly use pre compiled Handlebars or something similar
     daysOfEvents_HTML +=
@@ -111,7 +111,6 @@ parseEvents = function (events, eventkeys) {
       // parse the time string to date object, which the hour is 24 hour, then transform the date object to 12 hour object (not date Object)
       var eventStartTime = timeTo12Hour(timeFromString(te.startTime));
       var eventEndTime = timeTo12Hour(timeFromString(te.endTime));
-      //console.log(eventTimeStart);
       var prettyEventStartTime =
       '<time>\n' +
       '  <span class="hour">' + eventStartTime.getHour + '</span>\n' +
@@ -145,4 +144,3 @@ parseEvents = function (events, eventkeys) {
 // 1,5 gets today and 5 days ahead, so 6 files
 getEventFiles(1,5,[23,10,13]);
 // ^ ^ ^ ^ ^ ^ ^- this does everythings!
-

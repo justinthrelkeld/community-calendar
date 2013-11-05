@@ -4,69 +4,64 @@ var eventsObjectKeys = [];
 
 makeRequest = function (dObj) {
   var fileName = (dObj.getDate()) + '.' + (dObj.getMonth() + 1) + '.' + (dObj.getFullYear() - 2000);
-	console.log("requesting file " + fileName + ".json");
+  console.log("requesting file " + fileName + ".json");
   //connection opened
-	activeAjaxConnections++;
-	//console.log("activeAjaxConnections: " + activeAjaxConnections + " on opened");
-	//new xmlhttprequest
-	var ai = new AJAXInteraction("/events/" + fileName + ".json", function(req) {
-		//connection closed
+  activeAjaxConnections++;
+  //console.log("activeAjaxConnections: " + activeAjaxConnections + " on opened");
+  //new xmlhttprequest
+  var ai = new AJAXInteraction("/events/" + fileName + ".json", function(req) {
+    //connection closed
 
-		//if the headers were returned
-		if (req.readyState === 2) {
-			activeAjaxConnections--;
-			//console.log("activeAjaxConnections: " + activeAjaxConnections + " on closed");
-		  if (req.status === 200) {
+    //if the headers were returned
+    if (req.readyState === 2) {
+      activeAjaxConnections--;
+      //console.log("activeAjaxConnections: " + activeAjaxConnections + " on closed");
+      if (req.status === 200) {
         req.overrideMimeType("text/json; charset=utf-8");
       } else if (req.status === 404) {
         console.log('returned 404'); //you wouldn't want to see that anyways
         req.abort();
         req.overrideMimeType("text/plain; charset=utf-8");
       }
-      //console.log(req);
-		}
-		// if the file has been loaded
-		if (req.readyState === 4) {
-			//if it is ok or hasn't been modified (cached)
-			if (req.status === 200 || req.status === 304) {
-				//console.log("good");
-				eventsObject[fileName] = JSON.parse(req.responseText);
-        datesOfEventsLen = eventsObjectKeys.length;
-        console.log("length " + datesOfEventsLen);
-        eventsObjectKeys[datesOfEventsLen] = fileName;
+    }
+    // if the file has been loaded
+    if (req.readyState === 4) {
+      //if it is ok or hasn't been modified (cached)
+      if (req.status === 200 || req.status === 304) {
+        //console.log("good");
+        eventsObject[fileName] = JSON.parse(req.responseText);
+        //append as key, or we can not pass another argument to parseEvents() and use the object.getOwn
+        //I tried to pass the date object, but for some reason it is set as the last one before it sets it here :(
+        eventsObjectKeys.push(fileName);
         
-        //console.log("date day " + date.getDate());
-        //console.log((dObj.getDate()) + '.' + (dObj.getMonth() + 1) + '.' + (dObj.getFullYear() - 2000));
-        //console.log("date day: " + datesOfEvents[datesOfEventsLen + 1].getMonth());
       } else if (req.status === 404) {
         //console.log("not found");
       }
-      //console.log(req.responseText);
-      //console.log(activeAjaxConnections); //if this is enabled, it calls parseEvents() twice, perhaps due to something being there for it check how many connections are available  
+      //console.log(activeAjaxConnections);
       // if all requests have returned
       if (activeAjaxConnections === 0) {
         console.log('parsing Events'); //this returns twice sometimes and I don't know how to fix it.
-        //console.log(eventsObjectKeys);
         parseEvents(eventsObject, eventsObjectKeys);
-			}
-		}
-		//console.log(activeAjaxConnections);
-	}, true);
-	ai.doGet();
+      }
+    }
+    //console.log(activeAjaxConnections);
+  }, true);
+  ai.doGet();
 
 }
 
 getEventFiles = function(fromToday, daysToLookAhead, today) {
-	
-	// 1 would start from today, 2 would start from tomorrow
-	fromToday = (typeof fromToday !== 'undefined' ? fromToday : 1);
-	daysToLookAhead = (typeof daysToLookAhead !== 'undefined' ? daysToLookAhead : 3);
-	var events;
-	var totalDays = fromToday + daysToLookAhead;
-	var daysLater;
-	var date;
-	if (typeof today !== 'undefined') {
-		daysLater = new Date();
+  
+  // 1 would start from today, 2 would start from tomorrow
+  fromToday = (typeof fromToday !== 'undefined' ? fromToday : 1);
+  daysToLookAhead = (typeof daysToLookAhead !== 'undefined' ? daysToLookAhead : 3);
+  var events;
+  var totalDays = fromToday + daysToLookAhead;
+  var daysLater;
+  var date;
+
+  if (typeof today !== 'undefined') {
+    daysLater = new Date();
     console.log("Manual start day: " + today);
     date = {
       "getDate": today[0] - 1, //everything starts at 0
@@ -77,7 +72,7 @@ getEventFiles = function(fromToday, daysToLookAhead, today) {
     daysLater.setMonth(date.getMonth, date.getDate);
     daysLater.setFullYear(date.getFullYear);
   };
-  //var thing = {"this": {"is": {"an":["o","b","j","e","c","t"]}}};
+
   //get event files fromToday offset
   for (var i = fromToday; i <= totalDays; i++) {
     var thing = new Date();
@@ -85,18 +80,14 @@ getEventFiles = function(fromToday, daysToLookAhead, today) {
     thing.setMonth(1);
     thing.setFullYear(2018);
     if (typeof today === 'undefined') {
-    	daysLater = new Date();
+      daysLater = new Date();
     } else {
-    	daysLater.setMonth(date.getMonth, date.getDate);
-    	daysLater.setFullYear(date.getFullYear);
+      daysLater.setMonth(date.getMonth, date.getDate);
+      daysLater.setFullYear(date.getFullYear);
     }
-		//add `i` day(s) to date
-		daysLater.setDate(daysLater.getDate() + i);
-    //console.log(daysLater.getDate());
-		//string this date in dd.mm.yy form
-		//S_thisDay = daysLater.getDate() + "." + (daysLater.getMonth() + 1) + "." + daysLater.getFullYear().toString().substring(2, 4);
-		//console.log("requesting file " + S_thisDay + ".json");
-		makeRequest(daysLater, thing);
-	}
+    //add `i` day(s) to date
+    daysLater.setDate(daysLater.getDate() + i);
+    makeRequest(daysLater);
+  }
 
 };
