@@ -96,8 +96,8 @@ parseEvents = function (events, eventkeys) {
   for (var i = 0; i < daysCount; i++) {
 
     var date = eventDateFromString(eventkeys[i]);
-    var eventsDateH2 = (months[date.getMonth()]) + ' ' + (date.getDate() + 1) + ', ' + (date.getFullYear() - 2000);
-    var event_ul_id = (date.getFullYear() - 2000) + '-' + (date.getMonth() - 1) + '-' + (date.getDate() + 1);
+    var eventsDateH2 = (months[date.getMonth()]) + ' ' + (date.getDate() + 1) + ', ' + (date.getFullYear());
+    var event_ul_id = (date.getFullYear()) + '-' + (date.getMonth() - 1) + '-' + (date.getDate() + 1);
     
     // If we want much more complex templating then this we should probly use pre compiled Handlebars or something similar
     daysOfEvents_HTML +=
@@ -111,6 +111,11 @@ parseEvents = function (events, eventkeys) {
       // parse the time string to date object, which the hour is 24 hour, then transform the date object to 12 hour object (not date Object)
       var eventStartTime = timeTo12Hour(timeFromString(te.startTime));
       var eventEndTime = timeTo12Hour(timeFromString(te.endTime));
+      var timeHour;
+      if (eventStartTime.getMinute < 10) {
+        eventStartTime.getMinute = "0" + eventStartTime.getMinute;
+      }
+
       var prettyEventStartTime =
       '<time>\n' +
       '  <span class="hour">' + eventStartTime.getHour + '</span>\n' +
