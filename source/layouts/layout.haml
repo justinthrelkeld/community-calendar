@@ -24,7 +24,17 @@
     = javascript_include_tag "site"
 
   %body
-    %section#content
+    %main
+      %header
+        %a#show-right{:href => "#social"} Social
+        %h1 Super Awesome HTML5 Community Calendar!
+        %nav
+          %ul
+            %li
+              = link_to 'Home', '/index.html'
+      %section#content
+        = yield
+      %footer
       = yield
     %footer
     #map
