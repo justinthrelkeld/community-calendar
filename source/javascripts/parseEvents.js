@@ -11,32 +11,42 @@ eventDateFromString = function (dateString) {
 timeFromString = function (timeString) {
   // set new date object
   var d = new Date();
-  // match |`digit`|:|`digit``digit`|`whitespace`|`p`|case insensitive
-  var timeParsed = timeString.match(/(\d+)(?::(\d\d))?\s*(p?)/i);
+  // match |`digit`|`Passive`:|`digit``digit`|`whitespace`|`a` or `p`|case insensitive
+  var timeParsed = timeString.match(/(\d+)(?::(\d\d))?\s*([ap]?)/i);
+  
+  //timeParsed[0] is the first group
+  //timeParsed[1] is the hour. if it is a 24hour time minute is null
+  //timeParsed[2] is the minute
+  //timeParsed[3] is "" if p does not exist else is "p" or "P"
   
   timeParsed[1] = parseInt(timeParsed[1], 10);
   timeParsed[2] = parseInt(timeParsed[2], 10);
   // time Hour, length of string
-  var timeParsed1String = timeParsed[1] + '';
-  var timeParsed1Len = timeParsed1String.length;
-  // if p does not exist and the length of the time is 4 or 3
-  if (!timeParsed[3] && (timeParsed1Len === 4 || timeParsed1Len === 3)) {
-    // cut form the end of timeStr
-    d.setHours(parseInt(timeParsed1String.substr(0, timeParsed1Len - 2), 10));
-    d.setMinutes(parseInt(timeParsed1String.substr(timeParsed1Len - 2), 10) || 0);
-    // if minutes
-  } else if (timeParsed[2]) {
-    // set hour without adding 12
-    d.setHours(timeParsed[1]);
-    d.setMinutes(timeParsed[2] || 0);
-    // if p and hour is not 12 
-  } else if (timeParsed[3] && (timeParsed[1] !== 12)) {
-    // set hour, adding 12
-    d.setHours(timeParsed[1] += 12);
-    d.setMinutes(timeParsed[2] || 0);
+  var timeParsedString = timeParsed[1] + '';
+  var timeParsedLen = timeParsedString.length;
+  var addHours = 0;
+  var tHours = timeParsed[1];
+  var tMinutes = timeParsed[2];
+  console.log(timeParsed);
+  if (timeParsed[3].toUpperCase() === "P" && timeParsed[1] !== 12) {
+    addHours = 12;
+  } else if (timeParsed[3] === "" && isNaN(timeParsed[2])) {
+    // 12,34 1,23
+    tHours = timeParsedString.substr(0, timeParsedLen - 2);
+    tMinutes = timeParsedString.substr(timeParsedLen - 2);
+    
+    //console.log(tHours);
+    //console.log(tMinutes);
+    
+    d.setHours( parseInt(tHours, 10) );
+    d.setMinutes( parseInt(tMinutes, 10) );
   }
+  
+  d.setHours( parseInt(tHours, 10) + addHours);
+  d.setMinutes( parseInt(tMinutes, 10) || 0 );
+  
   return d;
-}
+};
 
 timeTo12Hour = function(dObj) {
   var hours = dObj.getHours();
@@ -96,8 +106,8 @@ parseEvents = function (events, eventkeys) {
   for (var i = 0; i < daysCount; i++) {
 
     var date = eventDateFromString(eventkeys[i]);
-    var eventsDateH2 = (months[date.getMonth()]) + ' ' + (date.getDate() + 1) + ', ' + (date.getFullYear());
-    var event_ul_id = (date.getFullYear()) + '-' + (date.getMonth() - 1) + '-' + (date.getDate() + 1);
+    var eventsDateH2 = (months[date.getMonth()]) + ' ' + (date.getDate() + 1) + ', ' + (date.getFullYear() - 2000);
+    var event_ul_id = (date.getFullYear() - 2000) + '-' + (date.getMonth() - 1) + '-' + (date.getDate() + 1);
     
     // If we want much more complex templating then this we should probly use pre compiled Handlebars or something similar
     daysOfEvents_HTML +=
@@ -111,11 +121,6 @@ parseEvents = function (events, eventkeys) {
       // parse the time string to date object, which the hour is 24 hour, then transform the date object to 12 hour object (not date Object)
       var eventStartTime = timeTo12Hour(timeFromString(te.startTime));
       var eventEndTime = timeTo12Hour(timeFromString(te.endTime));
-      var timeHour;
-      if (eventStartTime.getMinute < 10) {
-        eventStartTime.getMinute = "0" + eventStartTime.getMinute;
-      }
-
       var prettyEventStartTime =
       '<time>\n' +
       '  <span class="hour">' + eventStartTime.getHour + '</span>\n' +
