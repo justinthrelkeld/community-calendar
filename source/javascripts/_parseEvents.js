@@ -93,6 +93,7 @@ parseEvents = function (events, eventkeys) {
 
   var daysCount = eventkeys.length,
   daysOfEvents_HTML = "";
+  //sortable = {startTimes: [], endTimes: [], eventkeys: eventkeys};
   if (daysCount != 0) {
     for (var i = 0; i < daysCount; i++) {
 
@@ -100,24 +101,38 @@ parseEvents = function (events, eventkeys) {
       var eventsDateH2 = (months[date.getMonth()]) + ' ' + (date.getDate() + 1) + ', ' + (date.getFullYear());
       var event_ul_id = (date.getFullYear()) + '-' + (date.getMonth() - 1) + '-' + (date.getDate() + 1);
       
+      for (var i2 = 0, l2 = events[eventkeys[i]].length - 1; i2 < l2; i2++) {
+        events[eventkeys[i]][i2].startTimeDateObj = timeFromString(events[eventkeys[i]][i2].startTime);
+        events[eventkeys[i]][i2].endTimeDateObj = timeFromString(events[eventkeys[i]][i2].endTime);
+      }
+      
+      //console.log(sortable);
+      eventkeys.sort();
+      events[eventkeys[i]].sort(function(a,b){
+        return a.startTimeDateObj-b.startTimeDateObj
+      });
+      //console.log(events);
+      
       // If we want much more complex templating then this we should probly use pre compiled Handlebars or something similar
       daysOfEvents_HTML +=
       '<li class="date">\n' + 
       '  <h2>' + eventsDateH2 + '</h2>\n' +
       '  <ul id="' + event_ul_id + '">\n';
 
-      for (var i2 = 0, l2 = events[eventkeys[i]].length; i2 <= l2 - 1; i2++) {
+      for (var i2 = 0, l2 = events[eventkeys[i]].length - 1; i2 < l2; i2++) {
         //te = thisEvent
         var te = events[eventkeys[i]][i2];
         // parse the time string to date object, which the hour is 24 hour, then transform the date object to 12 hour object (not date Object)
-        var eventStartTime = timeTo12Hour(timeFromString(te.startTime));
-        var eventEndTime = timeTo12Hour(timeFromString(te.endTime));
+        var eventStartTime = timeTo12Hour(te.startTimeDateObj);
+        var eventEndTime = timeTo12Hour(te.endTimeDateObj);
+
         if (eventStartTime.getMinute < 10) {
           eventStartTime.getMinute = "0" + eventStartTime.getMinute;
         }
         if (eventEndTime.getMinute < 10) {
           eventEndTime.getMinute = "0" + eventEndTime.getMinute;
         }
+
         var prettyEventStartTime =
         '<time>\n' +
         '  <span class="hour">' + eventStartTime.getHour + '</span>\n' +
