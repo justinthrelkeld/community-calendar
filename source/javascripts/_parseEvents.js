@@ -1,4 +1,3 @@
-
 eventDateFromString = function (dateString) {
   d = new Date();
   date = dateString.split('.');
@@ -27,7 +26,7 @@ timeFromString = function (timeString) {
   var addHours = 0;
   var tHours = timeParsed[1];
   var tMinutes = timeParsed[2];
-  console.log(timeParsed);
+  //console.log(timeParsed);
   if (timeParsed[3].toUpperCase() === "P" && timeParsed[1] !== 12) {
     addHours = 12;
   } else if (timeParsed[3] === "" && isNaN(timeParsed[2])) {
@@ -69,9 +68,9 @@ timeTo12Hour = function(dObj) {
 }
 
 updateCalendar = function (daysOfEvents) {
-  var calendars = document.querySelectorAll('section.calendar ul.events');
+  var calendars = document.querySelector('section.calendar ul.events');
   //update calendar 0
-  calendars[0].innerHTML = daysOfEvents;
+  calendars.innerHTML = daysOfEvents;
 }
 
 parseEvents = function (events, eventkeys) {
@@ -94,57 +93,75 @@ parseEvents = function (events, eventkeys) {
 
   var daysCount = eventkeys.length,
   daysOfEvents_HTML = "";
+  //sortable = {startTimes: [], endTimes: [], eventkeys: eventkeys};
+  if (daysCount != 0) {
+    for (var i = 0; i < daysCount; i++) {
 
-  for (var i = 0; i < daysCount; i++) {
-
-    var date = eventDateFromString(eventkeys[i]);
-    var eventsDateH2 = (months[date.getMonth()]) + ' ' + (date.getDate() + 1) + ', ' + (date.getFullYear());
-    var event_ul_id = (date.getFullYear()) + '-' + (date.getMonth() - 1) + '-' + (date.getDate() + 1);
-    
-    // If we want much more complex templating then this we should probly use pre compiled Handlebars or something similar
-    daysOfEvents_HTML +=
-    '<li class="date">\n' + 
-    '  <h2>' + eventsDateH2 + '</h2>\n' +
-    '  <ul id="' + event_ul_id + '">\n';
-
-    for (var i2 = 0, l2 = events[eventkeys[i]].length; i2 <= l2 - 1; i2++) {
-      //te = thisEvent
-      var te = events[eventkeys[i]][i2];
-      // parse the time string to date object, which the hour is 24 hour, then transform the date object to 12 hour object (not date Object)
-      var eventStartTime = timeTo12Hour(timeFromString(te.startTime));
-      var eventEndTime = timeTo12Hour(timeFromString(te.endTime));
-      if (eventStartTime.getMinute < 10) {
-        eventStartTime.getMinute = "0" + eventStartTime.getMinute;
-      }
-      if (eventEndTime.getMinute < 10) {
-        eventEndTime.getMinute = "0" + eventEndTime.getMinute;
-      }
-      var prettyEventStartTime =
-      '<time>\n' +
-      '  <span class="hour">' + eventStartTime.getHour + '</span>\n' +
-      '  <span class="minute">' + eventStartTime.getMinute + '</span>\n' +
-      '  <span class="daypart ' + eventStartTime.getPeriod + '">' + eventStartTime.getPeriod + '</span>\n' +
-      '</time>\n';
+      var date = eventDateFromString(eventkeys[i]);
+      var eventsDateH2 = (months[date.getMonth()]) + ' ' + (date.getDate() + 1) + ', ' + (date.getFullYear());
+      var event_ul_id = (date.getFullYear()) + '-' + (date.getMonth() - 1) + '-' + (date.getDate() + 1);
       
-      var prettyEventEndTime =
-      '<time>\n' +
-      '  <span class="hour">' + eventEndTime.getHour + '</span>\n' +
-      '  <span class="minute">' + eventEndTime.getMinute + '</span>\n' +
-      '  <span class="daypart ' + eventEndTime.getPeriod + '">' + eventEndTime.getPeriod + '</span>\n' +
-      '</time>\n';
+      for (var i2 = 0, l2 = events[eventkeys[i]].length - 1; i2 < l2; i2++) {
+        events[eventkeys[i]][i2].startTimeDateObj = timeFromString(events[eventkeys[i]][i2].startTime);
+        events[eventkeys[i]][i2].endTimeDateObj = timeFromString(events[eventkeys[i]][i2].endTime);
+      }
       
+      //console.log(sortable);
+      eventkeys.sort();
+      events[eventkeys[i]].sort(function(a,b){
+        return a.startTimeDateObj-b.startTimeDateObj
+      });
+      //console.log(events);
+      
+      // If we want much more complex templating then this we should probly use pre compiled Handlebars or something similar
       daysOfEvents_HTML +=
-      '<li class="event">\n'+
-        prettyEventStartTime +
-      '  <span class="title">'+te.title+'</span>\n'+
-      '  <span class="location">'+te.location.address+'</span>\n'+
-      '</li>\n';
-    }
-    daysOfEvents_HTML += 
-    '  </ul>\n' +
-    '</li>\n';
-  }
+      '<li class="date">\n' + 
+      '  <h2>' + eventsDateH2 + '</h2>\n' +
+      '  <ul id="' + event_ul_id + '">\n';
 
+      for (var i2 = 0, l2 = events[eventkeys[i]].length - 1; i2 < l2; i2++) {
+        //te = thisEvent
+        var te = events[eventkeys[i]][i2];
+        // parse the time string to date object, which the hour is 24 hour, then transform the date object to 12 hour object (not date Object)
+        var eventStartTime = timeTo12Hour(te.startTimeDateObj);
+        var eventEndTime = timeTo12Hour(te.endTimeDateObj);
+
+        if (eventStartTime.getMinute < 10) {
+          eventStartTime.getMinute = "0" + eventStartTime.getMinute;
+        }
+        if (eventEndTime.getMinute < 10) {
+          eventEndTime.getMinute = "0" + eventEndTime.getMinute;
+        }
+
+        var prettyEventStartTime =
+        '<time>\n' +
+        '  <span class="hour">' + eventStartTime.getHour + '</span>\n' +
+        '  <span class="minute">' + eventStartTime.getMinute + '</span>\n' +
+        '  <span class="daypart ' + eventStartTime.getPeriod + '">' + eventStartTime.getPeriod + '</span>\n' +
+        '</time>\n';
+        
+        var prettyEventEndTime =
+        '<time>\n' +
+        '  <span class="hour">' + eventEndTime.getHour + '</span>\n' +
+        '  <span class="minute">' + eventEndTime.getMinute + '</span>\n' +
+        '  <span class="daypart ' + eventEndTime.getPeriod + '">' + eventEndTime.getPeriod + '</span>\n' +
+        '</time>\n';
+        
+        daysOfEvents_HTML +=
+        '<li class="event">\n'+
+          prettyEventStartTime +
+        '  <span class="title">'+te.title+'</span>\n'+
+        '  <span class="location">'+te.location.address+'</span>\n'+
+        '</li>\n';
+      }
+      daysOfEvents_HTML += 
+      '  </ul>\n' +
+      '</li>\n';
+    } 
+  } else {
+    daysOfEvents_HTML = 
+    'Sorry, no events within range';
+  }
   updateCalendar(daysOfEvents_HTML);
 
 }
