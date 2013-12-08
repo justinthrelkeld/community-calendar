@@ -8,6 +8,18 @@ There are three reasons for this project:
 # Objective
 The primary objective of this project is to build a fantastically well-designed community calendar. Core components will include user accounts, a submission mechanism, deep Facebook and other social integration for event promotion (possibly analytics?), multi-level permissions (editors, contribuitors), paid promotional oportunities...
 
+# How to... 
+The final product is a static web application housed in `/app`. The app can be hosted via GitHub pages. For an explaination on how that works, see the fantastic [GitHub Pages Documentation][GitHub pages].
+
+The application source is compiled and run with Middleman. To run the source app, run `$ middleman` (Assuming middleman is installed). See the Middleman getting started guide for [installation instructions][installing middleman].
+
+These instructions will continue to improve as the project matures. We may even switch over to using Jekyll for its [easy-peasy GitHub Pages integration][Jekyll]. See [issue #9] for a discussion of this possible path.
+
+[GitHub pages]: https://help.github.com/articles/creating-project-pages-manually
+[installing middleman]: http://middlemanapp.com/basics/getting-started/#toc_1
+[Jekyll]: http://jekyllrb.com/docs/github-pages/
+[issue #9]: https://github.com/justinthrelkeld/community-calendar/issues/9
+
 # Project Phases
 The project will be broken up into several large phases to allow things to get moving quickly and gracefully scale to provide more functionality.
 
