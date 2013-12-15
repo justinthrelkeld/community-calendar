@@ -35,6 +35,7 @@ Requirements:
   - Should be easy to keep updated.
   - Should be aware of whether an event has passed.
   - Should include some form of search/filtering mechanisim.
+  - Adding this new item to show pull request workflow.
 
 ## Phase 2
 Phase two will expand on the previous flat calendar, adding server side capibilities and refining the UX.
