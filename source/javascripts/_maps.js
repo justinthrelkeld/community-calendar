@@ -1,3 +1,3 @@
 function initMaps(){
-  var map = L.mapbox.map('map', 'examples.map-y7l23tes').setView([37.9, -77], 5);
+  var map = L.mapbox.map('map', 'justinthrelkeld.gi35hf5n').setView([37.9, -77], 5);
 }
