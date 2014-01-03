@@ -33,7 +33,7 @@ makeRequest = function (dObj) {
         //append as key, or we can not pass another argument to parseEvents() and use the object.getOwn
         //I tried to pass the date object, but for some reason it is set as the last one before it sets it here :(
         eventsObjectKeys.push(fileName);
-        
+
       } else if (req.status === 404) {
         //console.log("not found");
       }
@@ -51,7 +51,7 @@ makeRequest = function (dObj) {
 }
 
 getEventFiles = function(fromToday, daysToLookAhead, today) {
-  
+
   // 1 would start from today, 2 would start from tomorrow
   fromToday = (typeof fromToday !== 'undefined' ? fromToday : 1);
   daysToLookAhead = (typeof daysToLookAhead !== 'undefined' ? daysToLookAhead : 3);

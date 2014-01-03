@@ -17,7 +17,7 @@ makeRequest = function (dObj) {
       //if it is ok or hasn't been modified (cached)
       if (res.status === 200 || res.status === 304) {
         eventsObject[fileName] = JSON.parse(res.responseText);
-        eventsObjectKeys.push(fileName); 
+        eventsObjectKeys.push(fileName);
       }
       //console.log(activeAjaxConnections);
       // if all requests have returned
@@ -31,7 +31,7 @@ makeRequest = function (dObj) {
 }
 
 getEventFiles = function(fromToday, daysToLookAhead, today) {
-  
+
   // 1 would start from today, 2 would start from tomorrow
   fromToday = (typeof fromToday !== 'undefined' ? fromToday : 1);
   daysToLookAhead = (typeof daysToLookAhead !== 'undefined' ? daysToLookAhead : 3);

@@ -12,12 +12,12 @@ timeFromString = function (timeString) {
   var d = new Date();
   // match |`digit`|`Passive`:|`digit``digit`|`whitespace`|`a` or `p`|case insensitive
   var timeParsed = timeString.match(/(\d+)(?::(\d\d))?\s*([ap]?)/i);
-  
+
   //timeParsed[0] is the first group
   //timeParsed[1] is the hour. if it is a 24hour time minute is null
   //timeParsed[2] is the minute
   //timeParsed[3] is "" if p does not exist else is "p" or "P"
-  
+
   timeParsed[1] = parseInt(timeParsed[1], 10);
   timeParsed[2] = parseInt(timeParsed[2], 10);
   // time Hour, length of string
@@ -33,17 +33,17 @@ timeFromString = function (timeString) {
     // 12,34 1,23
     tHours = timeParsedString.substr(0, timeParsedLen - 2);
     tMinutes = timeParsedString.substr(timeParsedLen - 2);
-    
+
     //console.log(tHours);
     //console.log(tMinutes);
-    
+
     d.setHours( parseInt(tHours, 10) );
     d.setMinutes( parseInt(tMinutes, 10) );
   }
-  
+
   d.setHours( parseInt(tHours, 10) + addHours);
   d.setMinutes( parseInt(tMinutes, 10) || 0 );
-  
+
   return d;
 };
 
@@ -83,10 +83,10 @@ parseEvents = function (events, eventkeys) {
   // - Sort object by date (day) and by time. Passing the dates as an object will help with that too
   // - Prob want to make it only create one day of events at a time. This will most likely bog down
   // - Make getEventFiles() accept a dev argument for the start date so the files mustn't renamed every couple days < done
-  // - Pass dates to parseEvent() in an array so we don't waste resource parsing a once date straight back to a date < 
-  //     prob wont be worth the trouble, because it would require knowing if the file returned or not. 
-  //     hey i just thought of something, perhaps if in the getJson.js > makeRequest(), it already passes the pretty date, 
-  //     I could just move the pretty date var into the function and pass the whole date object, and when the requested file is added to the 
+  // - Pass dates to parseEvent() in an array so we don't waste resource parsing a once date straight back to a date <
+  //     prob wont be worth the trouble, because it would require knowing if the file returned or not.
+  //     hey i just thought of something, perhaps if in the getJson.js > makeRequest(), it already passes the pretty date,
+  //     I could just move the pretty date var into the function and pass the whole date object, and when the requested file is added to the
   //     object of events just add the date to the dateOfEvents object. < won't be easy, I thought of the fact that the async XHRs will not return in order and the dates were only the last date, so the date object was updating all instances of the date.
   // --More to come--
   */
@@ -100,22 +100,22 @@ parseEvents = function (events, eventkeys) {
       var date = eventDateFromString(eventkeys[i]);
       var eventsDateH2 = (months[date.getMonth()]) + ' ' + (date.getDate() + 1) + ', ' + (date.getFullYear());
       var event_ul_id = (date.getFullYear()) + '-' + (date.getMonth() - 1) + '-' + (date.getDate() + 1);
-      
+
       for (var i2 = 0, l2 = events[eventkeys[i]].length - 1; i2 < l2; i2++) {
         events[eventkeys[i]][i2].startTimeDateObj = timeFromString(events[eventkeys[i]][i2].startTime);
         events[eventkeys[i]][i2].endTimeDateObj = timeFromString(events[eventkeys[i]][i2].endTime);
       }
-      
+
       //console.log(sortable);
       eventkeys.sort();
       events[eventkeys[i]].sort(function(a,b){
         return a.startTimeDateObj-b.startTimeDateObj
       });
       //console.log(events);
-      
+
       // If we want much more complex templating then this we should probly use pre compiled Handlebars or something similar
       daysOfEvents_HTML +=
-      '<li class="date">\n' + 
+      '<li class="date">\n' +
       '  <h2>' + eventsDateH2 + '</h2>\n' +
       '  <ul id="' + event_ul_id + '">\n';
 
@@ -139,14 +139,14 @@ parseEvents = function (events, eventkeys) {
         '  <span class="minute">' + eventStartTime.getMinute + '</span>\n' +
         '  <span class="daypart ' + eventStartTime.getPeriod + '">' + eventStartTime.getPeriod + '</span>\n' +
         '</time>\n';
-        
+
         var prettyEventEndTime =
         '<time>\n' +
         '  <span class="hour">' + eventEndTime.getHour + '</span>\n' +
         '  <span class="minute">' + eventEndTime.getMinute + '</span>\n' +
         '  <span class="daypart ' + eventEndTime.getPeriod + '">' + eventEndTime.getPeriod + '</span>\n' +
         '</time>\n';
-        
+
         daysOfEvents_HTML +=
         '<li class="event">\n'+
           prettyEventStartTime +
@@ -154,12 +154,12 @@ parseEvents = function (events, eventkeys) {
         '  <span class="location">'+te.location.address+'</span>\n'+
         '</li>\n';
       }
-      daysOfEvents_HTML += 
+      daysOfEvents_HTML +=
       '  </ul>\n' +
       '</li>\n';
-    } 
+    }
   } else {
-    daysOfEvents_HTML = 
+    daysOfEvents_HTML =
     'Sorry, no events within range';
   }
   updateCalendar(daysOfEvents_HTML);
