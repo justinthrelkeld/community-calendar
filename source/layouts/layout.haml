@@ -6,7 +6,8 @@
     %meta{:content => data.page.description, :name => "description"}
     %meta{:content => "width=device-width", :name => "viewport"}
     
-    %title= data.page.title
+    %title 
+      = data.page.title
 
     // Vendor Resources
     // jQuery
@@ -35,8 +36,6 @@
       %section#content
         = yield
       %footer
-      = yield
     %footer
     #map
-    
     = javascript_include_tag "app"
