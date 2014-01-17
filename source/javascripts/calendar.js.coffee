@@ -1,4 +1,3 @@
-
 # only the returned result will be used, so this must retun a string of HTML. 
 # The date object is avilable through the first argument
 
@@ -9,9 +8,9 @@ preDayOfEvents = (d) ->
 	  <ul id="#{utils.formatDate(d, "%Y-%n-%j")}">
 	"""
 
-perEvent = (event, t) ->
+perEvent = (event, id, t) ->
 	"""
-	<li class="event">
+	<li class="event" id="#{id}">
 	  <time>
 	    <span class="hour">#{ t.start12Hour.getHours }</span>
 	    <span class="minute">#{ t.start12Hour.getMinutes }</span>
@@ -44,12 +43,13 @@ eventDateFromString = (dateString) ->
 
 events = {
 	# tree?
-	dates:       [   ]
-	keys:       [     ]
-	events:       { }
-	datesByName:  { }
+	ids:           {}
+	datesByName: {    }
+	events:     {      }
+	dates:         []
+	keys:          []
 }
-#object watch polyfill https://gist.github.com/eligrey/384583
+#object watch polyfill https://gist.github.com/eligrey/384583 if we don't like running a function on complete
 html = ""
 fileReturned = (filename, dayOfEvents) ->
 	# add the day of events to the events object with the filename as the key
@@ -65,6 +65,7 @@ fileReturned = (filename, dayOfEvents) ->
 	
 	for event in dayOfEvents
 		event.time = {}
+		#console.log event
 		# add convert the times to milliseconds and store them in the event object within a time object
 		event.time.startTime = utils.timeFromString(event.startTime).getTime()
 		event.time.endTime = utils.timeFromString(event.endTime).getTime()
@@ -85,9 +86,27 @@ allFilesHaveReturned = ->
 	#console.log events
 	parseEvents()
 
+active = null
+ohNoIWasClicked = (element) ->
+	if active?
+		active.removeAttribute("clicked")
+	element.setAttribute("clicked","")
+	active = element
+
 realUpdateCalendar = (input) ->
 	HTML = input || html
-	document.querySelector("ul.events").innerHTML = HTML
+	calendarElement = document.querySelector("ul.events")
+	calendarElement.innerHTML = HTML
+	calendarEvents = calendarElement.getElementsByTagName "li"
+	for element in [0..calendarEvents.length-1]
+		calendarEvents[element].addEventListener("click", (e) ->
+			e = e || event
+			target = 
+				e.target || e.srcElement
+			if @getAttribute("class") is "event"
+				ohNoIWasClicked(@)
+		, false)
+
 
 updateCalendar = ->
 	if document.readyState is "loading"
@@ -100,6 +119,7 @@ parseEvents = ->
 	if events.keys[0]?
 		events.order.sort (a,b) ->
 			a.date - b.date
+		Itarray = {}
 		for _day in [0..events.order.length - 1]
 			# this holds the name of the file and the date in milliseconds 
 			dayDate = events.order[_day]
@@ -113,25 +133,41 @@ parseEvents = ->
 			
 			# before the day of events
 			html += preDayOfEvents d
+
+			###tester = (array) ->
+				out = {}
+				console.log array.length
+				for i of array
+					out[array[i]] = i
+				console.log Object.getOwnPropertyNames(out).length###
 			
 			for _event in [0..day.length - 1]
-				event = day[_event]
+				thisEvent = day[_event]
 				# set up time variables
-				start24Hour = new Date(event.time.startTime)
-				end24Hour = new Date(event.time.endTime)
+				start24Hour = new Date(thisEvent.time.startTime)
+				end24Hour = new Date(thisEvent.time.endTime)
 				start12Hour = utils.timeTo12Hour start24Hour, "0M" 
-				end12Hour = utils.timeTo12Hour end24Hour, "0M" 
+				end12Hour = utils.timeTo12Hour end24Hour, "0M"
+				randStr = utils.makeRandomString(3)
+				# this could run forever if there are more than 250047 events
+				if Itarray[randStr]?
+					while Itarray[randStr]?
+						#console.log "duplicate"
+						randStr = utils.makeRandomString(3)
+
+				Itarray[randStr] = {dayKey: _day, eventKey: _event, randomString: randStr}
+				# 82 events in total
+				#console.log Itarray
 				# time object
 				T = 
 					start24Hour: start24Hour
 					end24Hour: end24Hour
 					start12Hour: start12Hour
 					end12Hour: end12Hour
-
-				html += perEvent event, T
-
+				html += perEvent thisEvent, randStr, T
+			# tester Itarray
 			html += postDayOfEvents d
-
+		console.log Itarray
 	else
 		html = @options.parsing.noEvents()
 

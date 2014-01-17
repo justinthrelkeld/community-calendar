@@ -80,7 +80,7 @@ class Utils
 
 	### get files, add to object ###
 	getFile: (filename) ->
-		#@activeAjaxConnections++ # add an open connection
+		#@activeAjaxConnections += 1 # add an open connection
 		ajax = new @Ajax
 			scope: @
 			mimeType: "application/json"
@@ -91,7 +91,7 @@ class Utils
 					if res.status is 404
 						res.abort() # if error page then abort loading
 				if res.readyState is 4 # if loading is done
-					@activeAjaxConnections-- # connection has returned headers
+					@activeAjaxConnections += -1 # connection has returned headers
 					if res.status is 200 || res.status is 304 # if OK or Not Modified
 						if typeof res.response is "object"
 							reponse = res.response
@@ -294,7 +294,17 @@ class Utils
 				l = y.length
 				y.slice l - 2, l
 		dateParsed
-	
+
+	makeRandomString: (length) ->
+		usable = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9","_"]
+		string = ""
+		arrayLength = usable.length
+		for i in [0..length - 1]
+			seed = Math.floor(Math.random() * arrayLength);
+			string += usable[seed]
+		#console.log string
+		string
+
 	### Set Option ###
 	set: (options) ->
 		@objectMergeRecursive @options, options
