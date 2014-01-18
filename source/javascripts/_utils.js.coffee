@@ -305,6 +305,32 @@ class Utils
 		#console.log string
 		string
 
+	replSym: (str) ->
+		#console.log str
+		sanitized = str
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;')
+		return sanitized
+
+	sanitizeInput: (obj) ->
+		if obj instanceof Array
+			for prop, k in obj
+				#console.log prop
+				obj[k] = @replSym prop
+		else 
+			for prop of obj
+				if typeof obj[prop] is "object" 
+					#console.log "object"
+					@sanitizeInput obj[prop]
+				else
+					#console.log "hello"
+					#console.log prop
+					obj[prop] = @replSym obj[prop]
+
+
 	### Set Option ###
 	set: (options) ->
 		@objectMergeRecursive @options, options

@@ -64,12 +64,13 @@ fileReturned = (filename, dayOfEvents) ->
 	# before the day of events
 	#preDayOfEvents(filenameDate)
 	
-	for event in dayOfEvents
-		event.time = {}
+	for eevent in dayOfEvents
+		utils.sanitizeInput eevent
+		eevent.time = {}
 		#console.log event
 		# add convert the times to milliseconds and store them in the event object within a time object
-		event.time.startTime = utils.timeFromString(event.startTime).getTime()
-		event.time.endTime = utils.timeFromString(event.endTime).getTime()
+		eevent.time.startTime = utils.timeFromString(eevent.startTime).getTime()
+		eevent.time.endTime = utils.timeFromString(eevent.endTime).getTime()
 		
 	# sort the events within this file, these are held in an array, no need for keys, for now
 	#utils.sort_soonest dayOfEvents, "time.startTime"
@@ -186,7 +187,6 @@ parseEvents = ->
 				html += perEvent thisEvent, randStr, T
 			# tester Itarray
 			html += postDayOfEvents d
-		console.log Itarray
 	else
 		html = @options.parsing.noEvents()
 
