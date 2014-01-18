@@ -4,13 +4,14 @@
 preDayOfEvents = (d) ->
 	"""
 	<li class="date">
-	  <h2>#{utils.formatDate(d, "%F %j, %Y")}</h2>
+	  <h2 class="j">#{utils.formatDate(d, "%F %j, %Y")}</h2>
 	  <ul id="#{utils.formatDate(d, "%Y-%n-%j")}">
 	"""
 
 perEvent = (event, id, t) ->
+	# prefix id with e for event, the markers/points will have a prefix of p or m
 	"""
-	<li class="event" id="#{id}">
+	<li class="event" id="e#{id}">
 	  <time>
 	    <span class="hour">#{ t.start12Hour.getHours }</span>
 	    <span class="minute">#{ t.start12Hour.getMinutes }</span>
@@ -86,26 +87,44 @@ allFilesHaveReturned = ->
 	#console.log events
 	parseEvents()
 
-active = null
+activeEventElement = null
 ohNoIWasClicked = (element) ->
-	if active?
-		active.removeAttribute("clicked")
+	if activeEventElement?
+		activeEventElement.removeAttribute("clicked")
 	element.setAttribute("clicked","")
-	active = element
+	activeEventElement = element
+
+maxDepth = 5
+climbToEventCount = 0
+climbToEvent = (element) ->
+	if climbToEventCount < maxDepth
+		climbToEventCount += 1
+		if element.classList?
+			classes = element.classList
+			for eClass in [0..classes.length - 1]
+				if classes[eClass] is "event"
+					climbToEventCount = 0
+					return element
+		if element.parentNode? then climbToEvent element.parentNode
+		else 
+			climbToEventCount = 0 
+			return
+	else 
+		# maxed out
+		climbToEventCount = 0
 
 realUpdateCalendar = (input) ->
 	HTML = input || html
 	calendarElement = document.querySelector("ul.events")
 	calendarElement.innerHTML = HTML
 	calendarEvents = calendarElement.getElementsByTagName "li"
-	for element in [0..calendarEvents.length-1]
-		calendarEvents[element].addEventListener("click", (e) ->
-			e = e || event
-			target = 
-				e.target || e.srcElement
-			if @getAttribute("class") is "event"
-				ohNoIWasClicked(@)
-		, false)
+	calendarElement.onclick = (e) ->
+		e = e || event
+		target = 
+			e.target || e.srcElement
+
+		element = climbToEvent(target, "event")
+		ohNoIWasClicked(element) if element
 
 
 updateCalendar = ->
