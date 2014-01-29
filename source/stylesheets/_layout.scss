@@ -21,12 +21,12 @@ body{
     padding-top: 0;
   }
 
-  #content{
+  main{
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 85%;
-    width: 27em;
+    height: 100%;
+    width: 100%;
     background-color: $light-background;
     z-index: 20;
     border-radius: 0 7px 0 0;
@@ -36,6 +36,11 @@ body{
     padding-bottom: 0;
     overflow: scroll;
     @include transition ( margin $slide-speed );
+  }
+
+  #content{
+    width: 100%;
+    overflow: scroll;
   }
 
   #map{
@@ -63,7 +68,7 @@ body{
 
 // OnCanvas
 
-#show-nav,
+#show-map,
 #show-right{
   position: absolute;
   z-index: 30;
@@ -71,84 +76,85 @@ body{
   display: none;
 }
 
-#show-nav{
+#show-map{
   left: 0;
 }
 #show-right{
   right: 0;
 }
 
-@include media($mobile){
-  html, body{width: 100%; height: 100%; margin: 0;}
+
+html, body{width: 100%; height: 100%; margin: 0; overflow: hidden;}
+body footer{
+  // z-index: -1;
+}
+
+body main{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow-x: scroll;
+}
+
+#show-map,
+#show-right{
+  display: block;
+  visibility: hidden;
+  text-decoration: none;
+  &:before{
+    font-size: 2em;
+    font-family: "FontAwesome";
+    content: "\f054";
+    display: block;
+    text-indent: 0;
+    visibility: visible;
+    text-align: right;
+    padding: .5em;
+  }
+}
+
+#map, #right{
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+body.show-map{
+  main{
+    margin-left: $side-panel-width;
+  }
+  #right{
+    z-index: -10;
+  }
+  #show-map:before{
+  }
+}
+
+body.show-map{
+  #main{
+    margin-left: -$side-panel-width;
+  }
+  #map{
+    position: absolute;
+    right: 0;
+    z-index: -10;
+  }
+  #show-map:before{
+    content: "\f053";
+  }
   body footer{
     z-index: -1;
   }
-  body #content{
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-  #show-map,
-  #show-right{
-    display: block;
-    visibility: hidden;
-    text-decoration: none;
-    &:before{
-      font-size: 2em;
-      font-family: "FontAwesome";
-      content: "\f053";
-      display: block;
-      text-indent: 0;
-      visibility: visible;
-      text-align: right;
-      padding: .5em;
-    }
-  }
+}
 
-  #map, #right{
-    z-index: 10;
-    width: $side-panel-width !important;
-    height: 100%;
-    display: block;
-  }
+main{
+  @include position(relative);
+  z-index: 20;
+}
 
-  body.show-map,
-  body.show-right{
-    #content{
-      overflow: hidden;
-    }
-  }
-
-  body.show-map{
-    #content{
-      margin-left: $side-panel-width;
-    }
-    #right{
-      z-index: -10;
-    }
-    #show-map:before{
-    }
-  }
-
-  body.show-right{ // will likely become show-event
-    #content{
-      margin-left: -$side-panel-width;
-    }
-    #map{
-      position: absolute;
-      right: 0;
-      z-index: -10;
-    }
-    #show-right:before{
-      content: "\f054";
-    }
-    body footer{
-      z-index: -1;
-    }
-  }
-
-  main{
-    @include position(relative);
-    z-index: 20;
+@include media($tablet){
+  #show-map{
+    display: none;
   }
 }
