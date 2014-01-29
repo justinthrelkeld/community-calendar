@@ -26,12 +26,8 @@
   %body
     %main
       %header
-        %a#show-right{:href => "#social"} Social
+        %a#show-map{:href => "#social"} Social
         %h1 Super Awesome HTML5 Community Calendar!
-        %nav
-          %ul
-            %li
-              = link_to 'Home', '/index.html'
       %section#content
         = yield
       %footer
