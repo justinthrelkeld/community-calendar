@@ -1,4 +1,4 @@
-# only the returned result will be used, so this must retun a string of HTML. 
+ # only the returned result will be used, so this must retun a string of HTML. 
 # The date object is avilable through the first argument
 
 preDayOfEvents = (d) ->
@@ -9,7 +9,7 @@ preDayOfEvents = (d) ->
 	"""
 
 perEvent = (event, id, t) ->
-	# prefix id with e for event, the markers/points will have a prefix of p or m
+	# prefix id with e for event, the markers/points will have a prefix of p or *m
 	"""
 	<li class="event" id="e#{id}">
 	  <time>
@@ -119,6 +119,7 @@ realUpdateCalendar = (input) ->
 	calendarElement = document.querySelector("ul.events")
 	calendarElement.innerHTML = HTML
 	calendarEvents = calendarElement.getElementsByTagName "li"
+	
 	calendarElement.onclick = (e) ->
 		e = e || event
 		target = 
@@ -134,6 +135,9 @@ updateCalendar = ->
 			realUpdateCalendar()
 	else 
 		realUpdateCalendar()
+
+makeHash = (eevent) ->
+	hash = utils.hasher("" + eevent.startTime + eevent.title + eevent.category);
 
 parseEvents = ->
 	if events.keys[0]?
@@ -168,14 +172,10 @@ parseEvents = ->
 				end24Hour = new Date(thisEvent.time.endTime)
 				start12Hour = utils.timeTo12Hour start24Hour, "0M" 
 				end12Hour = utils.timeTo12Hour end24Hour, "0M"
-				randStr = utils.makeRandomString(3)
-				# this could run forever if there are more than 250047 events
-				if Itarray[randStr]?
-					while Itarray[randStr]?
-						#console.log "duplicate"
-						randStr = utils.makeRandomString(3)
+				
+				hash = makeHash(thisEvent);
 
-				Itarray[randStr] = {dayKey: _day, eventKey: _event, randomString: randStr}
+				Itarray[hash] = {dayKey: _day, eventKey: _event, randomString: hash}
 				# 82 events in total
 				#console.log Itarray
 				# time object
@@ -184,13 +184,14 @@ parseEvents = ->
 					end24Hour: end24Hour
 					start12Hour: start12Hour
 					end12Hour: end12Hour
-				html += perEvent thisEvent, randStr, T
+				html += perEvent thisEvent, hash, T
 			# tester Itarray
 			html += postDayOfEvents d
 	else
-		html = @options.parsing.noEvents()
+		html = noEvents()
 
 	updateCalendar()
+	#console.log utils.hasher "str"
 
 
 # in cases where it seems that this ran twice, in most cases it is due to the fact that when an XML HTTP request is aborted they are considered done. When the browser refreshes, the requests are aborted thus complete, thus runs all done
@@ -199,8 +200,8 @@ allFilesHaveReturnedcount = 0
 
 utils = new Utils
 	dateRange:
-		from: [23,10,13]
-		to: 4
+		from: [3,6,14]
+		to: 1
 	dir: '/events/'
 	whenFileReturns: (filename, dayOfEvents) ->
 		fileReturned(filename, dayOfEvents)
